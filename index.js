@@ -10,8 +10,12 @@ async function main() {
     let res = await fetch(apiUrl);
     var json = customJSONData != "" ? customJSONData : await res.json();
 
+    if (customJSONData == "" && res == undefined)
+      throw new Error("No JSON Data Found");
+
     if (customJSONData != "") {
       json = JSON.parse(customJSONData);
+      console.log("(Using input data from input.json)");
       if (validateJSON(json, true)) {
         console.log("Success, Valid JSON");
         await fs.writeFile(
@@ -23,6 +27,7 @@ async function main() {
       }
     } else {
       if (validateJSON(json)) {
+        console.log("(Using data from API)");
         console.log("Success, Valid JSON");
         await fs.writeFile(
           "./io/output.json",
@@ -34,7 +39,7 @@ async function main() {
     }
   } catch (e) {
     logErr(e);
-    console.log("Invalid JSON");
+    console.log("Some error: ", e);
   }
 }
 
