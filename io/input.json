@@ -1,0 +1,12 @@
+{
+  "_id": "123",
+  "type": "object",
+  "requiredArray": ["firstName", "lastName"],
+  "properties": {
+    "firstName": { "typeDef": "string" },
+    "lastName": { "typeDef": "string" },
+    "books": { "typeDef": "integer" }
+  },
+  "Accept-num": "123",
+  "boolValue": "True"
+}

@@ -1,29 +1,39 @@
-try {
-  var customJSONData = require("./input.js").customJSON;
-} catch (e) {
-  console.log(e);
-}
 const validateJSON = require("./scripts/validator.js");
 const mapper = require("./scripts/mapper.js");
+const fs = require("fs/promises");
+const logErr = require("./scripts/log.js");
 
+var apiUrl = "https://genshin-impact.up.railway.app/character/xiao";
 async function main() {
   try {
-    let testUrl = "https://httpbin.org/get";
-    let url2 = "https://genshin-impact.up.railway.app/character/xiao";
-    let res = await fetch(url2);
+    const customJSONData = await fs.readFile("./io/input.json", "utf8");
+    let res = await fetch(apiUrl);
     var json = customJSONData != "" ? customJSONData : await res.json();
 
-    console.log("original::::::: ", json);
-    console.log("mapped::::::: ", mapper(json));
-
-    //   console.log(json);
-    if (validateJSON(json)) {
-      console.log("Valid JSON");
+    if (customJSONData != "") {
+      json = JSON.parse(customJSONData);
+      if (validateJSON(json, true)) {
+        console.log("Success, Valid JSON");
+        await fs.writeFile(
+          "./io/output.json",
+          JSON.stringify(mapper(json), undefined, 2)
+        );
+      } else {
+        console.log("Invalid JSON");
+      }
     } else {
-      console.log("Invalid JSON");
+      if (validateJSON(json)) {
+        console.log("Success, Valid JSON");
+        await fs.writeFile(
+          "./io/output.json",
+          JSON.stringify(mapper(json), undefined, 2)
+        );
+      } else {
+        console.log("Invalid JSON");
+      }
     }
   } catch (e) {
-    console.log(e);
+    logErr(e);
     console.log("Invalid JSON");
   }
 }

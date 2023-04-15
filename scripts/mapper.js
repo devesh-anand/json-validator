@@ -6,7 +6,17 @@ function mapper(json) {
       result[convertCamelCase(key)] = json[key].map((item) => {
         return typeof item != "object" ? item : mapper(item);
       });
-    } else if (typeof convertToNumber(json[key]) === "number") {
+    }
+    //checks and converts string to boolean
+    else if (
+      typeof json[key] == "string" &&
+      (json[key].toLowerCase() == "true" || json[key].toLowerCase() == "false")
+    ) {
+      result[convertCamelCase(key)] =
+        json[key].toLowerCase() == "true" ? true : false;
+    }
+    //checks and converts to numbers
+    else if (typeof convertToNumber(json[key]) === "number") {
       result[convertCamelCase(key)] = parseFloat(json[key]);
     } else if (typeof json[key] === "object") {
       result[convertCamelCase(key)] = mapper(json[key]);
@@ -22,7 +32,7 @@ function convertCamelCase(str) {
     flag = false;
 
   //if string starts with block letter, we don't change it
-  if (str[0] === str[0].toUpperCase()) return str;
+  if (str[0] === str[0].toUpperCase() && str[0] != "_") return str;
 
   // for initial "_" in string
   let pos = 0;
@@ -57,7 +67,5 @@ function convertToNumber(str) {
     return str;
   }
 }
-
-console.log(convertToNumber("-11"));
 
 module.exports = mapper;
