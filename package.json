@@ -1,0 +1,14 @@
+{
+  "name": "json-validator",
+  "version": "1.0.0",
+  "description": "JSON Validator",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Devesh Anand",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
